@@ -76,8 +76,8 @@ func (s *SuiteCounter) TestConcurrent() {
 	}
 
 	wg.Wait()
-	s.Equal(c.buckets[c.curIdx].count, 100)
-	s.Equal(c.buckets[c.curIdx].sum, 300)
+	s.Equal(c.buckets[c.curIdx].count, uint64(100))
+	s.Equal(c.buckets[c.curIdx].sum, 300.0)
 }
 
 type offset struct {
@@ -106,7 +106,7 @@ func (s *SuiteCounter) TestGetBucket() {
 	s.Equal(len(b), defaultBucketNum)
 	for i := 0; i < len(b); i++ {
 		s.Equal(b[i].end, record[i].end)
-		s.Equal(b[i].count, 3)
+		s.Equal(b[i].count, uint64(3))
 		s.Equal(b[i].sum, 11*record[i].m)
 		s.Equal(b[i].min, 1*record[i].m)
 		s.Equal(b[i].max, 6*record[i].m)
@@ -119,7 +119,7 @@ func (s *SuiteCounter) TestGetBucketReadonly() {
 	tick(defaultBucket)
 	c.getBuckets()[0].count = 8
 	// change value of GetBucket() won't affect real counter value
-	s.Equal(1, c.getBuckets()[0].count)
+	s.Equal(c.getBuckets()[0].count, uint64(1))
 }
 
 func (s *SuiteCounter) TestSnapshot() {

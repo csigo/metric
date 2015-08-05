@@ -23,8 +23,8 @@ func (s *SuiteExponential) TestMinMax() {
 
 	minV, maxV := exp.ValueRange()
 	minBin, maxBin := exp.BinRange()
-	s.Equal(minV, -maxValue)
-	s.Equal(maxV, maxValue)
+	s.Equal(minV, float64(-maxValue))
+	s.Equal(maxV, float64(maxValue))
 	s.Equal(minBin, -maxBin)
 	s.Equal(maxBin, maxBin)
 }

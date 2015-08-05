@@ -48,7 +48,7 @@ func (s *SuiteSimpleCounter) TestGetBucket() {
 	for i := 1; i <= defaultBucketNum; i++ {
 		tick(defaultBucket)
 	}
-	s.Equal(0, c.get())
+	s.Equal(c.get(), int64(0))
 }
 
 func TestRunSuiteSimpleCounter(t *testing.T) {

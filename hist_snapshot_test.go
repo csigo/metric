@@ -43,7 +43,7 @@ func (s *SuiteHistSnapshot) add(value float64, cnt int64) {
 // TestEmpty test empty histogram
 func (s *SuiteHistSnapshot) TestEmpty() {
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 0)
+	s.Equal(count, int64(0))
 	assertNearEqual(s.T(), 0, v[0])
 	assertNearEqual(s.T(), 0, v[1])
 	assertNearEqual(s.T(), 0, v[2])
@@ -53,7 +53,7 @@ func (s *SuiteHistSnapshot) TestAllZero() {
 	s.add(0, 100)
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 100)
+	s.Equal(count, int64(100))
 	assertNearEqual(s.T(), 0, v[0])
 	assertNearEqual(s.T(), 0, v[1])
 	assertNearEqual(s.T(), 0, v[2])
@@ -64,7 +64,7 @@ func (s *SuiteHistSnapshot) TestOneItem() {
 	s.add(100, 1)
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 1)
+	s.Equal(count, int64(1))
 	assertNearEqual(s.T(), 89.71641173621408, v[0])
 	assertNearEqual(s.T(), 89.71641173621408, v[1])
 	assertNearEqual(s.T(), 89.71641173621408, v[2])
@@ -74,7 +74,7 @@ func (s *SuiteHistSnapshot) TestSmallValue() {
 	s.add(0.00001, 1)
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 1)
+	s.Equal(count, int64(1))
 	assertNearEqual(s.T(), 8.971641173621403e-06, v[0])
 	assertNearEqual(s.T(), 8.971641173621403e-06, v[1])
 	assertNearEqual(s.T(), 8.971641173621403e-06, v[2])
@@ -85,7 +85,7 @@ func (s *SuiteHistSnapshot) TestNegativeOneItem() {
 	s.add(-100, 1)
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 1)
+	s.Equal(count, int64(1))
 	assertNearEqual(s.T(), -89.71641173621408, v[0])
 	assertNearEqual(s.T(), -89.71641173621408, v[1])
 	assertNearEqual(s.T(), -89.71641173621408, v[2])
@@ -96,7 +96,7 @@ func (s *SuiteHistSnapshot) TestDuplicated() {
 	s.add(100, 100)
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 100)
+	s.Equal(count, int64(100))
 	assertNearEqual(s.T(), 89.61357585357622, v[0])
 	assertNearEqual(s.T(), 94.75536998546919, v[1])
 	assertNearEqual(s.T(), 99.89716411736214, v[2])
@@ -108,7 +108,7 @@ func (s *SuiteHistSnapshot) TestUniformed() {
 	}
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 100)
+	s.Equal(count, int64(100))
 	assertNearEqual(s.T(), 487.13086138993947, v[0])
 	assertNearEqual(s.T(), 738.1694912028767, v[1])
 	assertNearEqual(s.T(), 994.858205868107, v[2])
@@ -118,7 +118,7 @@ func (s *SuiteHistSnapshot) TestAllMin() {
 	s.add(-maxValue-1, 100)
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 100)
+	s.Equal(count, int64(100))
 	assertNearEqual(s.T(), -maxValue, v[0])
 	assertNearEqual(s.T(), -maxValue, v[1])
 	assertNearEqual(s.T(), -maxValue, v[2])
@@ -128,7 +128,7 @@ func (s *SuiteHistSnapshot) TestAllMax() {
 	s.add(maxValue+1, 100)
 
 	v, count := s.sh.Percentiles(testPercentiles)
-	s.Equal(count, 100)
+	s.Equal(count, int64(100))
 	assertNearEqual(s.T(), maxValue, v[0])
 	assertNearEqual(s.T(), maxValue, v[1])
 	assertNearEqual(s.T(), maxValue, v[2])
@@ -138,10 +138,10 @@ func (s *SuiteHistSnapshot) TestInvalidPercentiles() {
 	s.add(maxValue+1, 100)
 
 	v, count := s.sh.Percentiles([]float64{-1, 3, -0.6})
-	s.Equal(count, 100)
-	s.Equal(math.NaN(), v[0])
-	s.Equal(math.NaN(), v[1])
-	s.Equal(math.NaN(), v[2])
+	s.Equal(count, int64(100))
+	s.True(math.IsNaN(v[0]))
+	s.True(math.IsNaN(v[1]))
+	s.True(math.IsNaN(v[2]))
 }
 
 func (s *SuiteHistSnapshot) TestBins() {
